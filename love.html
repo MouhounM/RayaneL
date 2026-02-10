@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Love 💖</title>
+
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 14px;
+  }
+
+  .wrap {
+    width: min(92vw, 900px);
+    text-align: center;
+  }
+
+  video {
+    width: 100%;
+    max-height: 60vh;
+    border-radius: 18px;
+    background: #000;
+    box-shadow: 0 0 45px rgba(255, 77, 109, 0.25);
+  }
+
+  .text {
+    margin-top: 32px;
+    line-height: 1.65;
+    font-size: clamp(16px, 4vw, 22px);
+  }
+
+  .line {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 2.2s ease, transform 2.2s ease;
+    margin: 10px 0;
+  }
+
+  .line.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .highlight {
+    color: #ff4d6d;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .divider {
+    height: 1px;
+    width: min(520px, 85%);
+    margin: 32px auto;
+    background: rgba(255,255,255,0.18);
+    opacity: 0;
+    transition: opacity 2.4s ease;
+  }
+
+  .divider.show {
+    opacity: 1;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <!-- 🎥 VIDÉO -->
+  <video controls autoplay muted playsinline preload="metadata">
+    <source src="media/valentine.mov" type="video/quicktime">
+    Ton navigateur ne supporte pas la lecture de cette vidéo.
+  </video>
+
+  <!-- 💬 TEXTE CINÉMA TRÈS LENT -->
+  <div class="text">
+    <div class="line">Pour ne jamais nous oublier,</div>
+    <div class="line highlight">mon seul amour, deux cœurs unis.</div>
+    <div class="line">Avec toi, je veux tout vivre, et tout surmonter ici-bas,</div>
+    <div class="line">et, jusqu'au paradis.</div>
+
+    <div class="divider"></div>
+
+    <div class="line">Face à mes dernières heures, je saurai faire preuve de sérénité,</div>
+    <div class="line">Mais l’idée de te savoir loin de moi…</div>
+    <div class="line">c’est cela, et seulement cela,</div>
+    <div class="line">qui me tétanise au plus haut point.</div>
+  </div>
+
+</div>
+
+<script>
+  const lines = document.querySelectorAll('.line');
+  const divider = document.querySelector('.divider');
+
+  /* ⏳⏳ RYTHME TRÈS LENT */
+  const startDelay = 2500; // pause avant la 1ère ligne
+  const step = 2200;      // délai entre chaque ligne
+
+  lines.forEach((line, index) => {
+    setTimeout(() => {
+      line.classList.add('show');
+    }, startDelay + index * step);
+  });
+
+  // Séparateur après le premier quatrain
+  setTimeout(() => {
+    divider.classList.add('show');
+  }, startDelay + 4 * step + 800);
+</script>
+
+</body>
+</html>

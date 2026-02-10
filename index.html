@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💘</title>
+
+<style>
+  body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+    touch-action: manipulation;
+  }
+
+  .container{
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92vw, 720px);
+    text-align: center;
+    padding: 0 12px;
+  }
+
+  h1{
+    margin: 0;
+    color:#b3003b;
+    font-size: clamp(22px, 5vw, 38px);
+    line-height: 1.25;
+  }
+
+  .signature{
+    margin-top: 14px;
+    font-size: clamp(16px, 3.8vw, 20px);
+    color: #a10035;
+    font-style: italic;
+  }
+
+  button{
+    padding: 16px 36px;
+    font-size: 18px;
+    border:none;
+    border-radius: 18px;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 10px 25px rgba(0,0,0,.12);
+  }
+
+  /* ❤️ OUI : pulse + lueur */
+  #oui{
+    margin-top: 56px;
+    background:#ff4d6d;
+    color:#fff;
+    transform: scale(1.6);
+    animation: heartbeatGlow 1.5s infinite ease-in-out;
+  }
+
+  @keyframes heartbeatGlow{
+    0%   { transform: scale(1.6); box-shadow: 0 0 0 rgba(255,77,109,0); }
+    25%  { transform: scale(1.72); box-shadow: 0 0 18px rgba(255,77,109,0.45); }
+    40%  { transform: scale(1.6); box-shadow: 0 0 8px rgba(255,77,109,0.25); }
+    60%  { transform: scale(1.78); box-shadow: 0 0 28px rgba(255,77,109,0.65); }
+    100% { transform: scale(1.6); box-shadow: 0 0 0 rgba(255,77,109,0); }
+  }
+
+  /* 😈 NON */
+  #non{
+    position: fixed;
+    background:#555;
+    color:#fff;
+    left: 60vw;
+    top: 60vh;
+    transition: left 0.04s linear, top 0.04s linear;
+    will-change: left, top;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Rayane ma chérie, veux-tu être ma Valentine ? 💖</h1>
+  <div class="signature">Ton chéri, Mehdi</div>
+  <button id="oui">Oui</button>
+</div>
+
+<button id="non">Non</button>
+
+<script>
+  const non = document.getElementById("non");
+  const oui = document.getElementById("oui");
+
+  // Anti-blocage / fuite rapide (souris + mobile)
+  let bx = window.innerWidth * 0.6, by = window.innerHeight * 0.6;
+  let px = window.innerWidth / 2, py = window.innerHeight / 2;
+
+  const margin = 14;
+  const boost = 3.3;
+  const safeDistance = () => window.innerWidth < 520 ? 165 : 150;
+
+  function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+  function placeButton(x,y){
+    const w = non.offsetWidth || 80;
+    const h = non.offsetHeight || 44;
+    bx = clamp(x, margin, window.innerWidth - w - margin);
+    by = clamp(y, margin, window.innerHeight - h - margin);
+    non.style.left = bx + "px";
+    non.style.top  = by + "px";
+  }
+  placeButton(bx, by);
+
+  function findEscape(px,py){
+    const safe = safeDistance();
+    const R = safe * boost;
+    const baseAngle = Math.atan2(by - py, bx - px);
+
+    let best=null, bestScore=-Infinity;
+    for(let i=0;i<18;i++){
+      const jitter = (Math.random()-0.5) * Math.PI;
+      const a = baseAngle + jitter;
+
+      const tx = px + Math.cos(a) * R;
+      const ty = py + Math.sin(a) * R;
+
+      const w = non.offsetWidth || 80;
+      const h = non.offsetHeight || 44;
+
+      const cx = clamp(tx, margin, window.innerWidth - w - margin);
+      const cy = clamp(ty, margin, window.innerHeight - h - margin);
+
+      const d = Math.hypot(cx - px, cy - py);
+      if(d >= safe && d > bestScore){
+        bestScore = d;
+        best = {x: cx, y: cy};
+      }
+    }
+    if(!best){
+      const a = baseAngle + Math.PI/2;
+      best = {
+        x: clamp(px + Math.cos(a) * R, margin, window.innerWidth),
+        y: clamp(py + Math.sin(a) * R, margin, window.innerHeight)
+      };
+    }
+    return best;
+  }
+
+  function tick(){
+    const d = Math.hypot(bx - px, by - py);
+    if(d < safeDistance()){
+      const pos = findEscape(px, py);
+      placeButton(pos.x, pos.y);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  document.addEventListener("mousemove", e => { px = e.clientX; py = e.clientY; });
+  document.addEventListener("touchstart", e => { const t=e.touches[0]; if(t){ px=t.clientX; py=t.clientY; } }, {passive:true});
+  document.addEventListener("touchmove",  e => { const t=e.touches[0]; if(t){ px=t.clientX; py=t.clientY; } }, {passive:true});
+
+  // ✅ REDIRECTION après Oui
+  oui.addEventListener("click", () => {
+    window.location.href = "love.html";
+  });
+
+  window.addEventListener("resize", () => placeButton(bx, by));
+</script>
+
+</body>
+</html>
